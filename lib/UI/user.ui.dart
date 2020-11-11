@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:login_check_app/models/api.services.dart';
-import 'package:login_check_app/models/users.dart';
+import 'package:login_check_app/models/user.dart';
+
+import '../models/api.services.dart';
 
 class UserUi extends StatefulWidget {
   UserUi({Key key}) : super(key: key);
@@ -12,18 +14,25 @@ class UserUi extends StatefulWidget {
 }
 
 class _UserState extends State<UserUi> {
-  List<Users> users;
+  List<User> user;
 
-  getUser() {
+  @override
+  void initState() {
+    super.initState(); 
+    debugPrint("INIT STATE");
+    APIservices.createUser();
     APIservices.fetchUser().then((response) {
+      debugPrint("Response");
       Iterable list = json.decode(response.body);
-      List<Users> userList = List<Users>();
-      userList = list.map((model) => Users.fromObject(model)).toList();
+      List<User> userList = List<User>();
+      userList = list.map((model) => User.fromObject(model)).toList();
 
       setState(() {
-        users = userList;
+        debugPrint("user " + userList.toString());
+        user = userList;
       });
     });
+  
   }
 
   @override
@@ -41,20 +50,7 @@ class _UserState extends State<UserUi> {
                   labelText: 'Nickname',
                 ),
                 onSubmitted: (String value) async {
-                  await showDialog<void>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                            title: const Text('Thanks!'),
-                            actions: <Widget>[
-                              FlatButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('OK'),
-                              )
-                            ]);
-                      });
+                
                 })
           ],
         ),

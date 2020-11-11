@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_check_app/UI/user.ui.dart';
-import 'package:login_check_app/models/users.dart';
+import 'package:login_check_app/models/user.dart';
 
 import 'UI/add.user.dart';
 
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.amber,
       ),
-      home: AddUser(Users("", "", "")),
+      home: UserUi()
     );
   }
 }

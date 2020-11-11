@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:login_check_app/models/users.dart';
+import 'package:login_check_app/models/user.dart';
 
 class AddUser extends StatefulWidget {
-  final Users users;
-  AddUser(this.users);
+  final User user;
+  AddUser(this.user);
 
   @override
-  State<StatefulWidget> createState() => _AddUserState(users);
+  State<StatefulWidget> createState() => _AddUserState(user);
 }
 
 class _AddUserState extends State<AddUser> {
-  Users users;
-  _AddUserState(this.users);
-  var firstNameController = TextEditingController();
-  var lastNameController = TextEditingController();
+  User user;
+  _AddUserState(this.user);
+  var eMailController = TextEditingController();
   var userNameController = TextEditingController();
+  var nameController = TextEditingController();
   var passwordController = TextEditingController();
   var textStyle = TextStyle();
   @override
   Widget build(BuildContext context) {
-    firstNameController.text = users.firstName;
-    lastNameController.text = users.lastName;
-    userNameController.text = users.userName;
-    passwordController.text = users.password;
+    eMailController.text = user.eMail;
+    userNameController.text = user.userName;
+    nameController.text = user.name;
+    passwordController.text = user.password;
     textStyle = Theme.of(context).textTheme.title;
     return _signUp();
   }
@@ -31,25 +31,11 @@ class _AddUserState extends State<AddUser> {
     return ListView(
       children: [
         TextField(
-          controller: firstNameController,
+          controller: eMailController,
           style: textStyle,
           onChanged: null,
           decoration: InputDecoration(
-              labelText: "FirstName",
-              labelStyle: textStyle,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-              )),
-        ),
-        SizedBox(
-          height: 16.0,
-        ),
-        TextField(
-          controller: lastNameController,
-          style: textStyle,
-          onChanged: null,
-          decoration: InputDecoration(
-              labelText: "LastName",
+              labelText: "e-Mail",
               labelStyle: textStyle,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5),
@@ -63,7 +49,21 @@ class _AddUserState extends State<AddUser> {
           style: textStyle,
           onChanged: null,
           decoration: InputDecoration(
-              labelText: "UserName",
+              labelText: "User Name",
+              labelStyle: textStyle,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+              )),
+        ),
+        SizedBox(
+          height: 16.0,
+        ),
+        TextField(
+          controller: nameController,
+          style: textStyle,
+          onChanged: null,
+          decoration: InputDecoration(
+              labelText: "Name",
               labelStyle: textStyle,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5),
@@ -78,7 +78,7 @@ class _AddUserState extends State<AddUser> {
           style: textStyle,
           onChanged: null,
           decoration: InputDecoration(
-              labelText: "PassWord",
+              labelText: "Password",
               labelStyle: textStyle,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(5),
