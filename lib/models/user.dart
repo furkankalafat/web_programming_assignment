@@ -6,7 +6,7 @@ class User {
   String _password;
   //String _createdDate;
 
-  User(this._eMail, this._userName, this._name, this._password,);//this._createdDate
+  User(this._eMail, this._userName, this._name, this._password,);
 
   String get eMail => _eMail;
   // ignore: unnecessary_getters_setters

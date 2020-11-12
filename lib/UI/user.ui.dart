@@ -20,19 +20,8 @@ class _UserState extends State<UserUi> {
   void initState() {
     super.initState(); 
     debugPrint("INIT STATE");
-    APIservices.createUser();
-    APIservices.fetchUser().then((response) {
-      debugPrint("Response");
-      Iterable list = json.decode(response.body);
-      List<User> userList = List<User>();
-      userList = list.map((model) => User.fromObject(model)).toList();
-
-      setState(() {
-        debugPrint("user " + userList.toString());
-        user = userList;
-      });
-    });
-  
+    //APIservices.loginUser();
+    //APIservices.createUser();
   }
 
   @override
