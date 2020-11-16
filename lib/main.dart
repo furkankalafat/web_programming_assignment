@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login_check_app/UI/user.ui.dart';
-import 'package:login_check_app/models/user.dart';
-
-import 'UI/add.user.dart';
+import 'package:login_check_app/screens/signup.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,7 +12,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.amber,
       ),
-      home: UserUi()
+      home: SignUp(),
     );
   }
 }
