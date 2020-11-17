@@ -1,29 +1,22 @@
+
 import 'package:flutter/material.dart';
-import 'package:login_check_app/models/user.dart';
-import 'package:login_check_app/screens/signin.dart';
+import 'package:login_check_app/models/resultMessages/login_result.dart';
+import 'package:login_check_app/services/api.services.dart';
+import 'package:login_check_app/models/login_request.dart';
+import 'package:login_check_app/screens/signup.dart';
+import 'package:login_check_app/utilites/slide_transition_right.dart';
 
 class SignIn extends StatefulWidget {
-  final User user;
-  SignIn(this.user);
-
   @override
-  State<StatefulWidget> createState() => _SignInState(user);
+  State<StatefulWidget> createState() => _SignInState();
 }
 
 class _SignInState extends State<SignIn> {
-  User user;
-  _SignInState(this.user);
-  var eMailController = TextEditingController();
   var userNameController = TextEditingController();
-  var nameController = TextEditingController();
   var passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    /*user.eMail = eMailController.text;
-    user.userName = userNameController.text;
-    user.name = nameController.text;
-    user.password = passwordController.text;*/
-
     return Scaffold(
       backgroundColor: Colors.amber[50],
       body: Padding(
@@ -53,10 +46,10 @@ class _SignInState extends State<SignIn> {
                           Container(
                             padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
                             child: Text(
-                              "Already have an account? Login from the button below.",
+                              "Don't have an account. Create one!",
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 20,
+                                fontSize: 24,
                                 fontWeight: FontWeight.w900,
                               ),
                             ),
@@ -64,17 +57,24 @@ class _SignInState extends State<SignIn> {
                           SizedBox(
                             height: 50.0,
                           ),
-                          FlatButton(
-                            color: Colors.amber,
-                            onPressed: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return SignUp();
-                              }));
-                            },
-                            child: Text(
-                              "Login",
-                              style: TextStyle(color: Colors.white),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                color: Colors.amber[400]),
+                            child: FlatButton(
+                              onPressed: () {
+                                setState(() {
+                                  Navigator.push(
+                                      context, SlideRightRoute(page: SignUp()));
+                                });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Text(
+                                  "Create Account",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -89,7 +89,7 @@ class _SignInState extends State<SignIn> {
                     children: <Widget>[
                       SizedBox(height: 60),
                       Text(
-                        "Sign Up",
+                        "Sign In",
                         style: TextStyle(
                             color: Colors.amber,
                             fontWeight: FontWeight.w600,
@@ -97,8 +97,6 @@ class _SignInState extends State<SignIn> {
                             fontFamily: 'Merriweather'),
                       ),
                       const SizedBox(height: 20.0),
-
-                      //USERNAME
 
                       LayoutBuilder(
                         builder:
@@ -138,110 +136,6 @@ class _SignInState extends State<SignIn> {
                                       ),
                                       borderRadius: BorderRadius.circular(5.0),
                                     ),
-                                    hintText: "reathe",
-                                    fillColor: Colors.amber[50],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-
-                      SizedBox(height: 20.0),
-
-                      //NAME
-
-                      LayoutBuilder(
-                        builder:
-                            (BuildContext context, BoxConstraints constraints) {
-                          return Row(
-                            children: <Widget>[
-                              Container(
-                                width: 80.0,
-                                child: Text(
-                                  "Name",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(color: Colors.amber),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 40.0,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width / 3.7,
-                                color: Colors.amber[50],
-                                child: TextField(
-                                  controller: nameController,
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                  ),
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.all(10.0),
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.amber[50],
-                                      ),
-                                      borderRadius: BorderRadius.circular(5.0),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.amber[50],
-                                      ),
-                                      borderRadius: BorderRadius.circular(5.0),
-                                    ),
-                                    hintText: "Furkan KALAFAT",
-                                    fillColor: Colors.amber[50],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-
-                      SizedBox(height: 20.0),
-
-                      //E-MAİL
-                      LayoutBuilder(
-                        builder:
-                            (BuildContext context, BoxConstraints constraints) {
-                          return Row(
-                            children: <Widget>[
-                              Container(
-                                width: 80.0,
-                                child: Text(
-                                  "Email",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(color: Colors.amber),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 40.0,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width / 3.7,
-                                color: Colors.amber[50],
-                                child: TextField(
-                                  controller: eMailController,
-                                  style: TextStyle(
-                                    fontSize: 15.0,
-                                  ),
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.all(10.0),
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.amber[50],
-                                      ),
-                                      borderRadius: BorderRadius.circular(5.0),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.amber[50],
-                                      ),
-                                      borderRadius: BorderRadius.circular(5.0),
-                                    ),
-                                    hintText: "anything@gmail.com",
                                     fillColor: Colors.amber[50],
                                   ),
                                 ),
@@ -274,6 +168,8 @@ class _SignInState extends State<SignIn> {
                                 width: MediaQuery.of(context).size.width / 3.7,
                                 color: Colors.amber[50],
                                 child: TextField(
+                                  obscureText: true,
+                                  keyboardType: TextInputType.visiblePassword,
                                   controller: passwordController,
                                   style: TextStyle(
                                     fontSize: 15.0,
@@ -292,7 +188,6 @@ class _SignInState extends State<SignIn> {
                                       ),
                                       borderRadius: BorderRadius.circular(5.0),
                                     ),
-                                    hintText: "*********",
                                     fillColor: Colors.amber[50],
                                   ),
                                 ),
@@ -312,7 +207,12 @@ class _SignInState extends State<SignIn> {
                           SizedBox(width: 270),
                           FlatButton(
                             color: Colors.white,
-                            onPressed: () {},
+                            onPressed: () {
+                              setState(() {
+                                userNameController.clear();
+                                passwordController.clear();
+                              });
+                            },
                             child: Text("Cancel"),
                           ),
                           SizedBox(
@@ -320,9 +220,14 @@ class _SignInState extends State<SignIn> {
                           ),
                           FlatButton(
                             color: Colors.amber,
-                            onPressed: () {},
+                            onPressed: () {
+                              setState(() {
+                                login(userNameController.text,
+                                    passwordController.text, context);
+                              });
+                            },
                             child: Text(
-                              "Create Account",
+                              "Login",
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
@@ -338,4 +243,43 @@ class _SignInState extends State<SignIn> {
       ),
     );
   }
+
+  void login(String userName, String password, BuildContext context) async {
+    LoginRequest loginRequest = LoginRequest(userName, password);
+    LoginResult loginResult = await APIservices.loginUser(loginRequest);
+    debugPrint("loginResult = " + loginResult.isSuccess.toString());
+    if (loginResult.message == "User Not Found") {
+      debugPrint("UserNotFound");
+      showMessage(context, "User Not Found");
+    } else if (loginResult.message == "Wrong Password") {
+      debugPrint("Wrong Password");
+      showMessage(context, "Wrong Password");
+    } else {
+      debugPrint("Login Successful");
+      showMessage(context, "Login Successful");
+    }
+  }
 }
+
+ Future<void> showMessage(BuildContext context, String message) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+          backgroundColor: Color(0xFFfbc02d),
+          content:  Text(message, style: TextStyle(color: Color(0xFF0088a3), fontWeight: FontWeight.bold, letterSpacing: 1.5 ,)),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Close", style: TextStyle(color: Colors.black),),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }

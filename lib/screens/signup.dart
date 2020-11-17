@@ -1,29 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:login_check_app/models/resultMessages/user_operation_result.dart';
+import 'package:login_check_app/services/api.services.dart';
 import 'package:login_check_app/models/user.dart';
 import 'package:login_check_app/screens/signin.dart';
+import 'package:login_check_app/utilites/slide_transition_left.dart';
+import 'package:login_check_app/utilites/slide_transition_right.dart';
 
 class SignUp extends StatefulWidget {
-  final User user;
-  SignUp(this.user);
-
   @override
-  State<StatefulWidget> createState() => _SignUpState(user);
+  State<StatefulWidget> createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
-  User user;
-  _SignUpState(this.user);
   var eMailController = TextEditingController();
   var userNameController = TextEditingController();
   var nameController = TextEditingController();
   var passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    user.eMail = eMailController.text;
-    user.userName = userNameController.text;
-    user.name = nameController.text;
-    user.password = passwordController.text;
-
     return Scaffold(
       backgroundColor: Colors.amber[50],
       body: Padding(
@@ -64,17 +58,24 @@ class _SignUpState extends State<SignUp> {
                           SizedBox(
                             height: 50.0,
                           ),
-                          FlatButton(
-                            color: Colors.amber,
-                            onPressed: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return SingIn();
-                              }));
-                            },
-                            child: Text(
-                              "Login",
-                              style: TextStyle(color: Colors.white),
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                color: Colors.amber[400]),
+                            child: FlatButton(
+                              onPressed: () {
+                                setState(() {
+                                  Navigator.push(
+                                      context, SlideLeftRoute(page: SignIn()));
+                                });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Text(
+                                  "Sign In",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -138,7 +139,8 @@ class _SignUpState extends State<SignUp> {
                                       ),
                                       borderRadius: BorderRadius.circular(5.0),
                                     ),
-                                    hintText: "reathe",
+                                    hintStyle: TextStyle(color: Colors.black26),
+                                    hintText: "furkankalafat",
                                     fillColor: Colors.amber[50],
                                   ),
                                 ),
@@ -190,7 +192,8 @@ class _SignUpState extends State<SignUp> {
                                       ),
                                       borderRadius: BorderRadius.circular(5.0),
                                     ),
-                                    hintText: "Furkan KALAFAT",
+                                    hintText: "Furkan",
+                                    hintStyle: TextStyle(color: Colors.black26),
                                     fillColor: Colors.amber[50],
                                   ),
                                 ),
@@ -242,6 +245,7 @@ class _SignUpState extends State<SignUp> {
                                       borderRadius: BorderRadius.circular(5.0),
                                     ),
                                     hintText: "anything@gmail.com",
+                                    hintStyle: TextStyle(color: Colors.black26),
                                     fillColor: Colors.amber[50],
                                   ),
                                 ),
@@ -274,6 +278,7 @@ class _SignUpState extends State<SignUp> {
                                 width: MediaQuery.of(context).size.width / 3.7,
                                 color: Colors.amber[50],
                                 child: TextField(
+                                  obscureText: true,
                                   controller: passwordController,
                                   style: TextStyle(
                                     fontSize: 15.0,
@@ -293,6 +298,7 @@ class _SignUpState extends State<SignUp> {
                                       borderRadius: BorderRadius.circular(5.0),
                                     ),
                                     hintText: "*********",
+                                    hintStyle: TextStyle(color: Colors.black26),
                                     fillColor: Colors.amber[50],
                                   ),
                                 ),
@@ -312,7 +318,14 @@ class _SignUpState extends State<SignUp> {
                           SizedBox(width: 270),
                           FlatButton(
                             color: Colors.white,
-                            onPressed: () {},
+                            onPressed: () {
+                              setState(() {
+                                eMailController.clear();
+                                nameController.clear();
+                                passwordController.clear();
+                                userNameController.clear();
+                              });
+                            },
                             child: Text("Cancel"),
                           ),
                           SizedBox(
@@ -320,7 +333,17 @@ class _SignUpState extends State<SignUp> {
                           ),
                           FlatButton(
                             color: Colors.amber,
-                            onPressed: () {},
+                            onPressed: () {
+                              setState(() {
+                                String eMail = eMailController.text;
+                                String name = nameController.text;
+                                String password = passwordController.text;
+                                String userName = userNameController.text;
+
+                                createUser(
+                                    eMail, userName, name, password, context);
+                              });
+                            },
                             child: Text(
                               "Create Account",
                               style: TextStyle(color: Colors.white),
@@ -336,6 +359,111 @@ class _SignUpState extends State<SignUp> {
           ),
         ),
       ),
+    );
+  }
+
+  void createUser(String eMail, String userName, String name, String password,
+      BuildContext context) async {
+    User user = User(eMail, userName, name, password);
+    UserOperationResult userOperationResult =
+        await APIservices.createUser(user);
+    debugPrint(
+        "UserOperationResult isSuccess  ${userOperationResult.isSuccess}");
+    if (userOperationResult.message == "Empty UserName") {
+      debugPrint("Empty UserName");
+      showMessage(context, "Username cannot be empty");
+    } else if (userOperationResult.message == "Empty Name") {
+      debugPrint("Empty Name");
+      showMessage(context, "Name cannot be empty");
+    } else if (userOperationResult.message == "Empty eMail") {
+      debugPrint("Empty eMail");
+      showMessage(context, "Email cannot be empty");
+    } else if (userOperationResult.message == "Empty Password") {
+      debugPrint("Empty password");
+      showMessage(context, "Password cannot be empty");
+    } else {
+      debugPrint("User Created");
+      showMessageSuccess(context);
+    }
+  }
+
+  Future<void> showMessage(BuildContext context, String message) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          backgroundColor: Color(0xFFfbc02d),
+          content: Text(message,
+              style: TextStyle(
+                color: Color(0xFF0088a3),
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.2,
+              )),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                "Close",
+                style: TextStyle(color: Colors.black),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  Future<void> showMessageSuccess(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          backgroundColor: Color(0xFFfbc02d),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("Your account has been created",
+                  style: TextStyle(
+                    color: Color(0xFF0088a3),
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
+                  )),
+              Text("You can login", style: TextStyle(
+                    color: Color(0xFF0088a3),
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,)),
+            ],
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                "Close",
+                style: TextStyle(color: Colors.black),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                "Sign In",
+                style: TextStyle(color: Colors.black),
+              ),
+              onPressed: () {
+                Navigator.push(context, SlideLeftRoute(page:SignIn()));
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

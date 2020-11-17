@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:login_check_app/models/api.services.dart';
+import 'package:login_check_app/services/api.services.dart';
 import 'package:login_check_app/models/user.dart';
 
-import '../models/api.services.dart';
+import '../services/api.services.dart';
 
 class UserUi extends StatefulWidget {
   UserUi({Key key}) : super(key: key);
