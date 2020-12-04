@@ -417,6 +417,7 @@ class _SignUpState extends State<SignUp> {
       },
     );
   }
+
   Future<void> showMessageSuccess(BuildContext context) {
     return showDialog(
       context: context,
@@ -436,10 +437,12 @@ class _SignUpState extends State<SignUp> {
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.2,
                   )),
-              Text("You can login", style: TextStyle(
+              Text("You can login",
+                  style: TextStyle(
                     color: Color(0xFF0088a3),
                     fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,)),
+                    letterSpacing: 1.2,
+                  )),
             ],
           ),
           actions: <Widget>[
@@ -458,7 +461,7 @@ class _SignUpState extends State<SignUp> {
                 style: TextStyle(color: Colors.black),
               ),
               onPressed: () {
-                Navigator.push(context, SlideLeftRoute(page:SignIn()));
+                Navigator.push(context, SlideLeftRoute(page: SignIn()));
               },
             ),
           ],
