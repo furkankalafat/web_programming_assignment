@@ -1,9 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:login_check_app/models/resultMessages/login_result.dart';
+import 'package:login_check_app/screens/library.dart';
 import 'package:login_check_app/services/api.services.dart';
 import 'package:login_check_app/models/login_request.dart';
 import 'package:login_check_app/screens/signup.dart';
+import 'package:login_check_app/utilites/slide_transition_left.dart';
 import 'package:login_check_app/utilites/slide_transition_right.dart';
 
 class SignIn extends StatefulWidget {
@@ -222,8 +223,10 @@ class _SignInState extends State<SignIn> {
                             color: Colors.amber,
                             onPressed: () {
                               setState(() {
-                                login(userNameController.text,
-                                    passwordController.text, context);
+                                /*login(userNameController.text,
+                                    passwordController.text, context);*/
+                                Navigator.push(
+                                    context, SlideLeftRoute(page: Library()));
                               });
                             },
                             child: Text(
@@ -261,25 +264,33 @@ class _SignInState extends State<SignIn> {
   }
 }
 
- Future<void> showMessage(BuildContext context, String message) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
+Future<void> showMessage(BuildContext context, String message) {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
-          backgroundColor: Color(0xFFfbc02d),
-          content:  Text(message, style: TextStyle(color: Color(0xFF0088a3), fontWeight: FontWeight.bold, letterSpacing: 1.5 ,)),
-          actions: <Widget>[
-            FlatButton(
-              child: Text("Close", style: TextStyle(color: Colors.black),),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+        backgroundColor: Color(0xFFfbc02d),
+        content: Text(message,
+            style: TextStyle(
+              color: Color(0xFF0088a3),
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.5,
+            )),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              "Close",
+              style: TextStyle(color: Colors.black),
             ),
-          ],
-        );
-      },
-    );
-  }
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
