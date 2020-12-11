@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:login_check_app/services/api.services.dart';
+import 'package:login_check_app/services/apiservices.dart';
 import 'package:login_check_app/models/user.dart';
 
-import '../services/api.services.dart';
+import '../services/apiservices.dart';
 
 class UserUi extends StatefulWidget {
   UserUi({Key key}) : super(key: key);
@@ -18,7 +18,7 @@ class _UserState extends State<UserUi> {
 
   @override
   void initState() {
-    super.initState(); 
+    super.initState();
     debugPrint("INIT STATE");
     //APIservices.loginUser();
     //APIservices.createUser();
@@ -38,9 +38,7 @@ class _UserState extends State<UserUi> {
                   border: OutlineInputBorder(),
                   labelText: 'Nickname',
                 ),
-                onSubmitted: (String value) async {
-                
-                })
+                onSubmitted: (String value) async {})
           ],
         ),
       ),
