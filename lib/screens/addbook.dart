@@ -134,7 +134,7 @@ class _AddBookState extends State<AddBook> {
 
 void createBook(String userName, String bookName, int likeCount, String comment,
     BuildContext context) async {
-  Book book = Book();
+  Book book = Book(userName: userName, bookName: bookName, likeCount: likeCount, comment: comment);
 
   BookOperationResult bookOperationResult = await APIservices.createBook(book);
 

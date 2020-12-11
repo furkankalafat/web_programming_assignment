@@ -13,8 +13,8 @@ import 'package:login_check_app/models/user.dart';
 class APIservices {
   static String createUserUrl = "https://192.168.1.35:5001/api/user/create";
   static String loginUserUrl = "https://192.168.1.35:5001/api/login/login";
-  static String addBookUrl = "";
-  static String listBookUrl = "";
+  static String addBookUrl = "https://192.168.1.36:5001/api/book/CreateBook";
+  static String listBookUrl = "https://192.168.1.36:5001/api/book/Book";
 
   static Future<UserOperationResult> createUser(User user) async {
     debugPrint("CreateUser");
@@ -84,12 +84,12 @@ class APIservices {
     }
   }
 
-  Future<List<Book>> getBooks() async {
-    Response res = await get(listBookUrl);
-
+  static Future<List<Book>> getBooks() async {
+    http.Response res = await http.get(listBookUrl,
+     );
     if (res.statusCode == 200) {
       List<dynamic> body = jsonDecode(res.body);
-
+      debugPrint("DD" + body.toString());
       List<Book> books =
           body.map((dynamic item) => Book.fromJson(item)).toList();
       debugPrint("hallettik");
