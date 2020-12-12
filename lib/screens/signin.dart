@@ -223,10 +223,12 @@ class _SignInState extends State<SignIn> {
                             color: Colors.amber,
                             onPressed: () {
                               setState(() {
-                                /*login(userNameController.text,
-                                    passwordController.text, context);*/
-                                Navigator.push(
+                                LoginRequest loginRequest = LoginRequest(userNameController.text, passwordController.text);
+                                login(userNameController.text,
+                                    passwordController.text, context);
+                                /*Navigator.push(
                                     context, SlideLeftRoute(page: Library()));
+                                    */
                               });
                             },
                             child: Text(
@@ -258,8 +260,7 @@ class _SignInState extends State<SignIn> {
       debugPrint("Wrong Password");
       showMessage(context, "Wrong Password");
     } else {
-      debugPrint("Login Successful");
-      showMessage(context, "Login Successful");
+      Navigator.push(context, SlideLeftRoute(page: Library(loginRequest)));
     }
   }
 }

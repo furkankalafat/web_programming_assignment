@@ -1,8 +1,6 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import 'package:login_check_app/models/book.dart';
 import 'package:login_check_app/models/login_request.dart';
 import 'package:login_check_app/models/resultMessages/book_operation_result.dart';
@@ -11,10 +9,12 @@ import 'package:login_check_app/models/resultMessages/user_operation_result.dart
 import 'package:login_check_app/models/user.dart';
 
 class APIservices {
-  static String createUserUrl = "https://192.168.1.35:5001/api/user/create";
-  static String loginUserUrl = "https://192.168.1.35:5001/api/login/login";
-  static String addBookUrl = "https://192.168.1.36:5001/api/book/CreateBook";
-  static String listBookUrl = "https://192.168.1.36:5001/api/book/Book";
+  static String createUserUrl = "";
+  static String loginUserUrl = "";
+  static String addBookUrl = "";
+  static String listBookUrl = "";
+  static String incrementLikeCountUrl =
+      "";
 
   static Future<UserOperationResult> createUser(User user) async {
     debugPrint("CreateUser");
@@ -61,10 +61,10 @@ class APIservices {
     }
   }
 
-  static Future<BookOperationResult> createBook(Book book) async {
-    debugPrint("CreateUser");
+  static Future<BookOperationResult> incrementLikeCount(Book book) async {
+    debugPrint("incrementLikeCount");
     final http.Response response = await http.post(
-      addBookUrl,
+      incrementLikeCountUrl,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         "Access-Control-Allow-Origin": "*",
@@ -85,17 +85,39 @@ class APIservices {
   }
 
   static Future<List<Book>> getBooks() async {
-    http.Response res = await http.get(listBookUrl,
-     );
+    http.Response res = await http.get(
+      listBookUrl,
+    );
     if (res.statusCode == 200) {
       List<dynamic> body = jsonDecode(res.body);
-      debugPrint("DD" + body.toString());
       List<Book> books =
           body.map((dynamic item) => Book.fromJson(item)).toList();
-      debugPrint("hallettik");
       return books;
     } else {
       throw "Can't get books";
+    }
+  }
+
+  static Future<BookOperationResult> createBook(Book book) async {
+    debugPrint("CreateUser");
+    final http.Response response = await http.post(
+      addBookUrl,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: jsonEncode(book.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint("http response" + response.body);
+      BookOperationResult bookOperationResult =
+          BookOperationResult.fromObject(jsonDecode(response.body));
+      return bookOperationResult;
+    } else {
+      return (BookOperationResult.fromObject({
+        "isSuccess": false,
+      }));
     }
   }
 }

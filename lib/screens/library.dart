@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:login_check_app/models/book.dart';
+import 'package:login_check_app/models/login_request.dart';
 import 'package:login_check_app/screens/addbook.dart';
 import 'package:login_check_app/screens/bookdetail.dart';
 import 'package:login_check_app/screens/signin.dart';
 import 'package:login_check_app/services/apiservices.dart';
 import 'package:login_check_app/utilites/slide_transition_left.dart';
 
+// ignore: must_be_immutable
 class Library extends StatefulWidget {
+  LoginRequest loginRequest;
+  Library(this.loginRequest);
   @override
   _LibraryState createState() => _LibraryState();
 }
 
 class _LibraryState extends State<Library> {
-  final APIservices apiServices = APIservices();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +28,12 @@ class _LibraryState extends State<Library> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Expanded(flex: 8, child: SizedBox()),
+              Expanded(flex: 2,child: Padding(
+                padding: const EdgeInsets.only(left:8.0),
+                child: Text("Welcome " + widget.loginRequest.userName,
+                style: TextStyle(color: Colors.teal),),
+              )),
+              Expanded(flex: 6, child: SizedBox()),
               Expanded(
                 flex: 6,
                 child: Text(
@@ -41,7 +49,7 @@ class _LibraryState extends State<Library> {
                     Icons.add,
                   ),
                   onPressed: () {
-                    Navigator.push(context, SlideLeftRoute(page: AddBook()));
+                    Navigator.push(context, SlideLeftRoute(page: AddBook(widget.loginRequest)));
                   },
                 ),
               ),
