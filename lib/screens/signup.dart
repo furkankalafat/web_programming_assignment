@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:login_check_app/models/resultMessages/user_operation_result.dart';
-import 'package:login_check_app/services/api.services.dart';
+import 'package:login_check_app/services/apiservices.dart';
 import 'package:login_check_app/models/user.dart';
 import 'package:login_check_app/screens/signin.dart';
 import 'package:login_check_app/utilites/slide_transition_left.dart';
-import 'package:login_check_app/utilites/slide_transition_right.dart';
 
 class SignUp extends StatefulWidget {
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:login_check_app/models/resultMessages/login_result.dart';
 import 'package:login_check_app/screens/library.dart';
-import 'package:login_check_app/services/api.services.dart';
+import 'package:login_check_app/services/apiservices.dart';
 import 'package:login_check_app/models/login_request.dart';
 import 'package:login_check_app/screens/signup.dart';
 import 'package:login_check_app/utilites/slide_transition_left.dart';
@@ -223,10 +223,11 @@ class _SignInState extends State<SignIn> {
                             color: Colors.amber,
                             onPressed: () {
                               setState(() {
-                                /*login(userNameController.text,
-                                    passwordController.text, context);*/
-                                Navigator.push(
+                                login(userNameController.text,
+                                    passwordController.text, context);
+                                /*Navigator.push(
                                     context, SlideLeftRoute(page: Library()));
+                                    */
                               });
                             },
                             child: Text(
@@ -258,8 +259,7 @@ class _SignInState extends State<SignIn> {
       debugPrint("Wrong Password");
       showMessage(context, "Wrong Password");
     } else {
-      debugPrint("Login Successful");
-      showMessage(context, "Login Successful");
+      Navigator.push(context, SlideLeftRoute(page: Library(loginRequest)));
     }
   }
 }

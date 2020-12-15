@@ -1,20 +1,20 @@
 class LoginRequest {
 
-  String _userName;
-  String _password;
+  String userName;
+  String password;
 
-  LoginRequest(this._userName, this._password);
+  LoginRequest(this.userName, this.password);
 
   
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
-    map["userName"] = _userName;
-    map["password"] = _password;
+    map["userName"] = userName;
+    map["password"] = password;
     return map;
   }
 
   LoginRequest.fromObject(dynamic o) {
-    this._userName = o["userName"];
-    this._password = o["password"];
+    this.userName = o["userName"];
+    this.password = o["password"];
   }
 }
