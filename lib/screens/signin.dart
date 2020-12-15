@@ -223,7 +223,6 @@ class _SignInState extends State<SignIn> {
                             color: Colors.amber,
                             onPressed: () {
                               setState(() {
-                                LoginRequest loginRequest = LoginRequest(userNameController.text, passwordController.text);
                                 login(userNameController.text,
                                     passwordController.text, context);
                                 /*Navigator.push(
