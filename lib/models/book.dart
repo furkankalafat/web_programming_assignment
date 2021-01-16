@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class Book {
   String userName;
   String bookName;
@@ -7,10 +5,10 @@ class Book {
   String comment;
 
   Book({
-    @required this.userName,
-    @required this.bookName,
-    @required this.likeCount,
-    @required this.comment,
+    this.userName,
+    this.bookName,
+    this.likeCount,
+    this.comment,
   });
 
   factory Book.fromJson(Map<String, dynamic> json) {

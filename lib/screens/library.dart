@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:login_check_app/models/book.dart';
 import 'package:login_check_app/models/login_request.dart';
+import 'package:login_check_app/models/resultMessages/book_operation_result.dart';
 import 'package:login_check_app/screens/addbook.dart';
-import 'package:login_check_app/screens/bookdetail.dart';
 import 'package:login_check_app/screens/signin.dart';
 import 'package:login_check_app/services/apiservices.dart';
 import 'package:login_check_app/utilites/slide_transition_left.dart';
@@ -16,6 +16,8 @@ class Library extends StatefulWidget {
 }
 
 class _LibraryState extends State<Library> {
+  IconData defaultIcon = Icons.thumb_up_off_alt;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,11 +30,15 @@ class _LibraryState extends State<Library> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Expanded(flex: 2,child: Padding(
-                padding: const EdgeInsets.only(left:8.0),
-                child: Text("Welcome " + widget.loginRequest.userName,
-                style: TextStyle(color: Colors.teal),),
-              )),
+              Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      "Welcome " + widget.loginRequest.userName,
+                      style: TextStyle(color: Colors.teal),
+                    ),
+                  )),
               Expanded(flex: 6, child: SizedBox()),
               Expanded(
                 flex: 6,
@@ -49,7 +55,8 @@ class _LibraryState extends State<Library> {
                     Icons.add,
                   ),
                   onPressed: () {
-                    Navigator.push(context, SlideLeftRoute(page: AddBook(widget.loginRequest)));
+                    Navigator.push(context,
+                        SlideLeftRoute(page: AddBook(widget.loginRequest)));
                   },
                 ),
               ),
@@ -71,23 +78,14 @@ class _LibraryState extends State<Library> {
         future: APIservices.getBooks(),
         builder: (BuildContext context, AsyncSnapshot<List<Book>> snapshot) {
           if (snapshot.hasData) {
-            List<Book> posts = snapshot.data;
-            return ListView(
-              children: posts
-                  .map(
-                    (Book book) => ListTile(
-                      title: Text(book.userName),
-                      subtitle: Text(book.bookName),
-                      onTap: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => BookDetail(
-                            book: book,
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                  .toList(),
+            return ListView.builder(
+              itemCount: snapshot.data.length,
+              itemBuilder: (BuildContext context, int index) {
+                if (index == 0) {
+                  return SizedBox(height: 35);
+                }
+                return _buildBookList(snapshot.data[index]);
+              },
             );
           } else {
             return Center(child: CircularProgressIndicator());
@@ -95,5 +93,103 @@ class _LibraryState extends State<Library> {
         },
       ),
     );
+  }
+
+  _buildBookList(Book book) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Container(
+        margin: EdgeInsets.all(10),
+        height: 125,
+        width: double.infinity,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20), color: Colors.amber[300]),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 15, 0, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //BOOKNAME PART
+
+                  Text(
+                    book.bookName,
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  SizedBox(height: 5),
+
+                  //USERNAME PART
+
+                  Text(
+                    book.userName,
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 15),
+                  Row(
+                    children: [
+                      //READ INFO
+
+                      Icon(Icons.bookmark),
+                      Text("Read"),
+
+                      SizedBox(width: 10),
+
+                      //LIKE COUNT
+
+                      Icon(Icons.thumb_up_alt),
+                      Text("likeCount"),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
+            //COMMENT PART
+
+            Padding(
+              padding: EdgeInsets.fromLTRB(75, 15, 15, 0),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 175,
+                    child: Text(
+                      book.comment,
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void incrementLike(Book book, BuildContext context) async {
+    book.userName = book.userName;
+    book.bookName = book.bookName;
+    book.likeCount = book.likeCount;
+    book.comment = book.comment;
+    BookOperationResult bookOperationResult =
+        await APIservices.incrementLikeCount(book);
+
+    if (bookOperationResult.isSuccess) {
+      setState(() {
+        debugPrint(defaultIcon.toString());
+        book.likeCount++;
+        defaultIcon = Icons.thumb_up;
+      });
+    } else {
+      debugPrint("error");
+    }
   }
 }

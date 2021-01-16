@@ -339,8 +339,8 @@ class _SignUpState extends State<SignUp> {
                                 String password = passwordController.text;
                                 String userName = userNameController.text;
 
-                                createUser(
-                                    eMail, userName, name, password, context);
+                                createUser(eMail, userName, name, password,
+                                    null, null, context);
                               });
                             },
                             child: Text(
@@ -362,8 +362,9 @@ class _SignUpState extends State<SignUp> {
   }
 
   void createUser(String eMail, String userName, String name, String password,
-      BuildContext context) async {
-    User user = User(eMail, userName, name, password);
+      String likesBookList, String readBookList, BuildContext context) async {
+    User user =
+        User(eMail, userName, name, password, likesBookList, readBookList);
     UserOperationResult userOperationResult =
         await APIservices.createUser(user);
     debugPrint(
