@@ -364,7 +364,7 @@ class _SignUpState extends State<SignUp> {
   void createUser(String eMail, String userName, String name, String password,
       String likesBookList, String readBookList, BuildContext context) async {
     User user =
-        User(eMail, userName, name, password, likesBookList, readBookList);
+        User(eMail:eMail,userName: userName,name: name, password: password,likesBookList: likesBookList,readBookList: readBookList);
     UserOperationResult userOperationResult =
         await APIservices.createUser(user);
     debugPrint(

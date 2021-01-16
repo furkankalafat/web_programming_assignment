@@ -67,6 +67,7 @@ class _BookDetailState extends State<BookDetail> {
     book.bookName = book.bookName;
     book.likeCount = book.likeCount;
     book.comment = book.comment;
+    /*
     BookOperationResult bookOperationResult =
         await APIservices.incrementLikeCount(book);
 
@@ -79,5 +80,6 @@ class _BookDetailState extends State<BookDetail> {
     } else {
       debugPrint("error");
     }
+    */
   }
 }

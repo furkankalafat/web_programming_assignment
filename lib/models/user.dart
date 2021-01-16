@@ -1,20 +1,20 @@
 class User {
-  String _eMail;
-  String _userName;
-  String _name;
-  String _password;
-  String _likesBookList;
-  String _readBookList;
-
-  User(
-    this._eMail,
-    this._userName,
-    this._name,
-    this._password,
-    this._likesBookList,
-    this._readBookList,
-  );
-
+  String eMail;
+  String userName;
+  String name;
+  String password;
+  String likesBookList;
+  String readBookList;
+  DateTime createdDate;
+  User({
+    this.eMail,
+    this.userName,
+    this.name,
+    this.password,
+    this.likesBookList,
+    this.readBookList,
+  });
+/*
   Map<String, dynamic> toMap() {
     var map = Map<String, dynamic>();
     map["eMail"] = _eMail;
@@ -26,13 +26,23 @@ class User {
 
     return map;
   }
+*/
+  Map<String, dynamic> toJson() => {
+        "eMail": eMail,
+        "userName": userName,
+        "name": name,
+        "password" : password,
+        "likesBookList" : likesBookList,
+        "readBookList" : readBookList
+      };
 
   User.fromObject(dynamic o) {
-    this._eMail = o["eMail"];
-    this._userName = o["userName"];
-    this._name = o["name"];
-    this._password = o["password"];
-    this._likesBookList = o["likesBookList"];
-    this._readBookList = o["readBookList"];
+    this.eMail = o["eMail"];
+    this.userName = o["userName"];
+    this.name = o["name"];
+    this.password = o["password"];
+    this.likesBookList = o["likesBookList"];
+    this.readBookList = o["readBookList"];
+    this.createdDate = o["CreatedDate"];
   }
 }

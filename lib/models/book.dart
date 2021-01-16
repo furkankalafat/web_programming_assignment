@@ -3,12 +3,14 @@ class Book {
   String bookName;
   int likeCount = 0;
   String comment;
-
+  DateTime createdDate;
+  
   Book({
     this.userName,
     this.bookName,
     this.likeCount,
-    this.comment,
+    this.comment, 
+    DateTime createdDate,
   });
 
   factory Book.fromJson(Map<String, dynamic> json) {
@@ -17,6 +19,7 @@ class Book {
       bookName: json["bookName"] as String,
       likeCount: json["likeCount"] as int,
       comment: json["comment"] as String,
+      createdDate:json["CreatedDate"] as DateTime,
     );
   }
 
