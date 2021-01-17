@@ -11,18 +11,18 @@ import 'package:login_check_app/models/resultMessages/user_operation_result.dart
 import 'package:login_check_app/models/user.dart';
 
 class APIservices {
-  static String createUserUrl = "https://192.168.1.39:5001/api/user/create";
-  static String loginUserUrl = "https://192.168.1.39:5001/api/login/login";
-  static String addBookUrl = "https://192.168.1.39:5001/api/book/CreateBook";
-  static String listBookUrl = "https://192.168.1.39:5001/api/book/Book";
+  static String createUserUrl = "";
+  static String loginUserUrl = "";
+  static String addBookUrl = "";
+  static String listBookUrl = "";
   static String incrementLikeCountUrl =
-      "https://192.168.1.39:5001/api/book/Increment";
-  static String readListUpdateUrl = "https://192.168.1.39:5001/api/user/Read";
+      "";
+  static String readListUpdateUrl = "";
   static String writeCommentToFileUrl =
-      "https://192.168.1.39:5001/api/book/NewComment";
+      "";
   static String readControlUrl =
-      "https://192.168.1.39:5001/api/book/ReadControl";
-  static String userInfoUrl = "https://192.168.1.39:5001/api/user/UserInfo";
+      "";
+  static String userInfoUrl = "";
 
   static Future<UserOperationResult> createUser(User user) async {
     debugPrint("CreateUser");

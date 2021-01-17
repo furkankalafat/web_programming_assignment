@@ -8,6 +8,7 @@ import 'package:login_check_app/screens/addbook.dart';
 import 'package:login_check_app/screens/signin.dart';
 import 'package:login_check_app/services/apiservices.dart';
 import 'package:login_check_app/utilites/slide_transition_left.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/resultMessages/book_operation_result.dart';
 import '../models/resultMessages/user_operation_result.dart';
@@ -87,8 +88,11 @@ class _LibraryState extends State<Library> {
                     flex: 1,
                     child: FlatButton(
                       child: Text("Log Out"),
-                      onPressed: () {
-                        Navigator.push(context, SlideLeftRoute(page: SignIn()));
+                      onPressed: () async {
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        prefs.remove('userName');
+                        prefs.remove('password');
+                        Navigator.pushReplacement(context, SlideLeftRoute(page: SignIn()));
                       },
                     ),
                   ),
@@ -181,7 +185,7 @@ class _LibraryState extends State<Library> {
                     child: FlatButton(
                         child: Text("Reset"),
                         onPressed: () {
-                          filterIndex = "default";
+                          listIndex = "default";
                           getBooks();
                         }),
                   ),
@@ -205,7 +209,8 @@ class _LibraryState extends State<Library> {
     );
   }
 
-  _filterBooks() {
+  _filterBooks() async{
+    await getUserInfo();
     setState(() {
       if (filterIndex == "FilterLikes") {
         filteredBookList = bookList.where((book) {
@@ -390,6 +395,7 @@ class _LibraryState extends State<Library> {
                                     ),
                                   ),
                                   Flexible(
+                                    flex: 3,
                                     child: Text(
                                       commentList[index],
                                       style: TextStyle(
@@ -474,7 +480,8 @@ class _LibraryState extends State<Library> {
   }
 
   void getBooks() async {
-    //bookList = await APIservices.getBooks(listIndex);
+    bookList = await APIservices.getBooks(listIndex);
+    /*
     bookList.add(Book(
         userName: "testUser",
         bookName: "cukulata",
@@ -505,15 +512,9 @@ class _LibraryState extends State<Library> {
         likeCount: 21,
         comment: "testComment5",
         createdDate: DateTime(2012, 06, 28)));
-
+*/
     setState(() {
       filteredBookList = bookList;
-      /*
-      bookList.sort((a, b) {
-        return b.likeCount.compareTo(a.likeCount); //SON NOKTA
-      
-      });
-      */
       // ignore: unnecessary_statements
       //bookList;
     });
@@ -579,13 +580,15 @@ class _LibraryState extends State<Library> {
     }
   }
 
-  void getUserInfo() async {
-    //user = await APIservices.userInfo(widget.loginRequest);
+  Future<void> getUserInfo() async {
+    user = await APIservices.userInfo(widget.loginRequest);
+    /*
     user = User(
         eMail: "enesbayar@gmail.com",
         userName: "enesbayar",
         likesBookList: "cukulata,testBook3",
         readBookList: "testBook2,testBook4");
+        */
     debugPrint("""
     UserName = ${user.userName}
     likesList = ${user.likesBookList}

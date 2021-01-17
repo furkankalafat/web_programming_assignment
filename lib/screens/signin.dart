@@ -6,6 +6,7 @@ import 'package:login_check_app/models/login_request.dart';
 import 'package:login_check_app/screens/signup.dart';
 import 'package:login_check_app/utilites/slide_transition_left.dart';
 import 'package:login_check_app/utilites/slide_transition_right.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/login_request.dart';
 
@@ -226,13 +227,14 @@ class _SignInState extends State<SignIn> {
                             onPressed: () {
                               setState(() {
                                 //login("enesbayar","test",context);
-                                /*
+                                
                                 login(userNameController.text,
                                     passwordController.text, context);
-                                    */
+                                    
+                                    /*
                                 Navigator.push(
                                     context, SlideLeftRoute(page: Library(LoginRequest("enesbayar","test"))));
-                                    
+                                    */
                                     
                               });
                             },
@@ -265,7 +267,10 @@ class _SignInState extends State<SignIn> {
       debugPrint("Wrong Password");
       showMessage(context, "Wrong Password");
     } else {
-      Navigator.push(context, SlideLeftRoute(page: Library(loginRequest)));
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('userName', userName);
+      prefs.setString("password", password);
+      Navigator.pushReplacement(context, SlideLeftRoute(page: Library(loginRequest)));
     }
   }
 }
