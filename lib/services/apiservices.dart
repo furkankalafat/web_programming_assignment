@@ -22,6 +22,7 @@ class APIservices {
       "https://192.168.1.39:5001/api/book/NewComment";
   static String readControlUrl =
       "https://192.168.1.39:5001/api/book/ReadControl";
+  static String userInfoUrl = "https://192.168.1.39:5001/api/user/UserInfo";
 
   static Future<UserOperationResult> createUser(User user) async {
     debugPrint("CreateUser");
@@ -102,7 +103,9 @@ class APIservices {
       List<dynamic> body = jsonDecode(res.body);
       List<Book> books =
           body.map((dynamic item) => Book.fromJson(item)).toList();
-      debugPrint(books.toString());
+      books.forEach((element) { 
+       debugPrint("DateTime = " +element.createdDate.toString());
+      });
       if (listIndex == "SortByAtoZ") {
         books.sort((a, b) {
           return a.bookName.toLowerCase().compareTo(b.bookName.toLowerCase());
@@ -117,7 +120,7 @@ class APIservices {
         });
       } else if (listIndex == "SortBylikes") {
         books.sort((a, b) {
-          return a.likeCount.compareTo(b.likeCount);
+          return b.likeCount.compareTo(a.likeCount);
         });
       }
       return books;
@@ -218,6 +221,27 @@ class APIservices {
       return (BookOperationResult.fromObject({
         "isSuccess": false,
       }));
+    }
+  }
+
+  static Future<User> userInfo(
+      LoginRequest loginRequest) async {
+    debugPrint("readControl");
+    final http.Response response = await http.post(
+      userInfoUrl,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: jsonEncode(loginRequest.toMap()),
+    );
+
+    if (response.statusCode == 200) {
+      debugPrint("http response" + response.body);
+      User user = User.fromObject(jsonDecode(response.body));
+      return user;
+    } else {
+      return User();
     }
   }
 }

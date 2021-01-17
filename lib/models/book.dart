@@ -1,3 +1,4 @@
+
 class Book {
   String userName;
   String bookName;
@@ -10,7 +11,7 @@ class Book {
     this.bookName,
     this.likeCount,
     this.comment, 
-    DateTime createdDate,
+    this.createdDate,
   });
 
   factory Book.fromJson(Map<String, dynamic> json) {
@@ -19,7 +20,7 @@ class Book {
       bookName: json["bookName"] as String,
       likeCount: json["likeCount"] as int,
       comment: json["comment"] as String,
-      createdDate:json["CreatedDate"] as DateTime,
+      createdDate: DateTime.tryParse(json["createdDate"].toString()),
     );
   }
 

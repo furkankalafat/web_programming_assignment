@@ -29,9 +29,11 @@ class _LibraryState extends State<Library> {
   List<Book> bookList = [];
   bool refreshReadInfo = false;
   String listIndex;
+  User user;
   @override
   void initState() {
     getBooks();
+    getUserInfo();
     super.initState();
   }
 
@@ -104,6 +106,7 @@ class _LibraryState extends State<Library> {
                         child: Text("Sort By A to Z"),
                         onPressed: () {
                           listIndex = "SortByAtoZ";
+                          getBooks();
                           print("az");
                         }),
                   ),
@@ -116,6 +119,7 @@ class _LibraryState extends State<Library> {
                         child: Text("Sort By Date (newest)"),
                         onPressed: () {
                           listIndex = "SortByDateNew";
+                          getBooks();
                           print("SortByDateNew");
                         }),
                   ),
@@ -127,8 +131,9 @@ class _LibraryState extends State<Library> {
                     child: FlatButton(
                         child: Text("Sort By Date (oldest)"),
                         onPressed: () {
-                          listIndex = "SortByNameOld";
-                          print("SortByNameOld");
+                          listIndex = "SortByDateOld";
+                          getBooks();
+                          print("SortByDateOld");
                         }),
                   ),
                   Container(
@@ -139,8 +144,12 @@ class _LibraryState extends State<Library> {
                     child: FlatButton(
                         child: Text("Sort By Likes"),
                         onPressed: () {
-                          listIndex = "SortBylikes";
+                          setState(() {
+                            listIndex = "SortBylikes";
+                          getBooks();
                           print("SortBylikes");
+                          });
+                          
                         }),
                   ),
                   Container(
@@ -187,7 +196,6 @@ class _LibraryState extends State<Library> {
 
   _buildBookList(Book book, index) {
     splitComment(book);
-    debugPrint("neden null" + book.createdDate.toString());
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 400, vertical: 20),
       child: Column(
@@ -427,15 +435,13 @@ class _LibraryState extends State<Library> {
   }
 
   void getBooks() async {
-    //bookList = await APIservices.getBooks();
-    bookList = List<Book>.generate(2, (index) {
-      return Book(
+    //bookList = await APIservices.getBooks(listIndex);
+    bookList.add(Book(
           userName: "testUser",
           bookName: "testBook",
           likeCount: 5,
           comment: "testComment",
-          createdDate: DateTime.now());
-    });
+          createdDate: DateTime.now()));
     bookList.add(Book(
         userName: "testUser2",
         bookName: "testBook2",
@@ -445,16 +451,33 @@ class _LibraryState extends State<Library> {
     bookList.add(Book(
         userName: "testUser3",
         bookName: "testBook3",
-        likeCount: 8,
+        likeCount: 3,
         comment: "testComment3",
         createdDate: DateTime(2020, 12, 05)));
+    bookList.add(Book(
+        userName: "testUser4",
+        bookName: "testBook4",
+        likeCount: 5,
+        comment: "testComment4",
+        createdDate: DateTime(2017, 02, 05)));
+    bookList.add(Book(
+        userName: "testUser5",
+        bookName: "testBook5",
+        likeCount: 21,
+        comment: "testComment5",
+        createdDate: DateTime(2012, 06, 28)));
+        
     setState(() {
-      // ignore: unnecessary_statements
+      /*
       bookList.sort((a, b) {
         return b.likeCount.compareTo(a.likeCount); //SON NOKTA
+      
       });
+      */
+      // ignore: unnecessary_statements
       //bookList;
     });
+    
   }
 
   void like(Book book, String userName) async {
@@ -515,5 +538,15 @@ class _LibraryState extends State<Library> {
     } else {
       debugPrint("error");
     }
+  }
+
+  void getUserInfo() async {
+    //user = await APIservices.userInfo(widget.loginRequest);
+    user = User(eMail: "enesbayar@gmail.com", userName: "enesbayar", likesBookList: "testBook,testBook3", readBookList: "testBook2,testBook4");
+    debugPrint("""
+    UserName = ${user.userName}
+    likesList = ${user.likesBookList}
+    readList = ${user.readBookList}
+    """);
   }
 }
