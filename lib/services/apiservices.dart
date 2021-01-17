@@ -18,8 +18,10 @@ class APIservices {
   static String incrementLikeCountUrl =
       "https://192.168.1.39:5001/api/book/Increment";
   static String readListUpdateUrl = "https://192.168.1.39:5001/api/user/Read";
-  static String writeCommentToFileUrl = "https://192.168.1.39:5001/api/book/NewComment";
-  static String readControlUrl = "https://192.168.1.39:5001/api/book/ReadControl";
+  static String writeCommentToFileUrl =
+      "https://192.168.1.39:5001/api/book/NewComment";
+  static String readControlUrl =
+      "https://192.168.1.39:5001/api/book/ReadControl";
 
   static Future<UserOperationResult> createUser(User user) async {
     debugPrint("CreateUser");
@@ -66,9 +68,11 @@ class APIservices {
     }
   }
 
-  static Future<BookOperationResult> incrementLikeCount(CompositeObject compositeObject) async {
+  static Future<BookOperationResult> incrementLikeCount(
+      CompositeObject compositeObject) async {
     debugPrint("incrementLikeCount");
-    debugPrint("CompositeOBject book = ${compositeObject.book}, user = ${compositeObject.user}");
+    debugPrint(
+        "CompositeOBject book = ${compositeObject.book}, user = ${compositeObject.user}");
     final http.Response response = await http.post(
       incrementLikeCountUrl,
       headers: <String, String>{
@@ -90,7 +94,7 @@ class APIservices {
     }
   }
 
-  static Future<List<Book>> getBooks() async {
+  static Future<List<Book>> getBooks(String listIndex) async {
     http.Response res = await http.get(
       listBookUrl,
     );
@@ -99,6 +103,23 @@ class APIservices {
       List<Book> books =
           body.map((dynamic item) => Book.fromJson(item)).toList();
       debugPrint(books.toString());
+      if (listIndex == "SortByAtoZ") {
+        books.sort((a, b) {
+          return a.bookName.toLowerCase().compareTo(b.bookName.toLowerCase());
+        });
+      } else if (listIndex == "SortByDateNew") {
+        books.sort((a, b) {
+          return b.createdDate.compareTo(a.createdDate);
+        });
+      } else if (listIndex == "SortByDateOld") {
+        books.sort((a, b) {
+          return a.createdDate.compareTo(b.createdDate);
+        });
+      } else if (listIndex == "SortBylikes") {
+        books.sort((a, b) {
+          return a.likeCount.compareTo(b.likeCount);
+        });
+      }
       return books;
     } else {
       throw "Can't get books";
@@ -127,7 +148,9 @@ class APIservices {
       }));
     }
   }
-   static Future<UserOperationResult> readListUpdate(CompositeObject compositeObject) async {
+
+  static Future<UserOperationResult> readListUpdate(
+      CompositeObject compositeObject) async {
     debugPrint("readListUpdate");
     final http.Response response = await http.post(
       readListUpdateUrl,
@@ -150,7 +173,8 @@ class APIservices {
     }
   }
 
-  static Future<BookOperationResult> newComment(CompositeBookComment compositeBookComment) async {
+  static Future<BookOperationResult> newComment(
+      CompositeBookComment compositeBookComment) async {
     debugPrint("newComment");
     final http.Response response = await http.post(
       writeCommentToFileUrl,
@@ -173,7 +197,8 @@ class APIservices {
     }
   }
 
-  static Future<BookOperationResult> readControl(CompositeObject compositeObject) async {
+  static Future<BookOperationResult> readControl(
+      CompositeObject compositeObject) async {
     debugPrint("readControl");
     final http.Response response = await http.post(
       readControlUrl,

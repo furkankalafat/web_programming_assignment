@@ -28,6 +28,7 @@ class _LibraryState extends State<Library> {
   List<TextEditingController> _controllers = [];
   List<Book> bookList = [];
   bool refreshReadInfo = false;
+  String listIndex;
   @override
   void initState() {
     getBooks();
@@ -38,60 +39,139 @@ class _LibraryState extends State<Library> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50),
+        preferredSize: Size.fromHeight(100),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.amber[800],
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          child: Column(
             children: [
-              Expanded(
-                  flex: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          "Welcome " + widget.loginRequest.userName,
+                          style: TextStyle(color: Colors.teal),
+                        ),
+                      )),
+                  Expanded(flex: 6, child: SizedBox()),
+                  Expanded(
+                    flex: 6,
                     child: Text(
-                      "Welcome " + widget.loginRequest.userName,
-                      style: TextStyle(color: Colors.teal),
+                      "LIBRARY",
+                      style: TextStyle(fontSize: 20),
                     ),
-                  )),
-              Expanded(flex: 6, child: SizedBox()),
-              Expanded(
-                flex: 6,
-                child: Text(
-                  "LIBRARY",
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-              SizedBox(width: 50),
-              Expanded(
-                flex: 1,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.add,
                   ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        SlideLeftRoute(page: AddBook(widget.loginRequest)));
-                  },
-                ),
+                  SizedBox(width: 50),
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.add,
+                      ),
+                      onPressed: () {
+                        Navigator.push(context,
+                            SlideLeftRoute(page: AddBook(widget.loginRequest)));
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: FlatButton(
+                      child: Text("Log Out"),
+                      onPressed: () {
+                        Navigator.push(context, SlideLeftRoute(page: SignIn()));
+                      },
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                ],
               ),
-              Expanded(
-                flex: 1,
-                child: FlatButton(
-                  child: Text("Log Out"),
-                  onPressed: () {
-                    Navigator.push(context, SlideLeftRoute(page: SignIn()));
-                  },
-                ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.amber[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: FlatButton(
+                        child: Text("Sort By A to Z"),
+                        onPressed: () {
+                          listIndex = "SortByAtoZ";
+                          print("az");
+                        }),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.amber[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: FlatButton(
+                        child: Text("Sort By Date (newest)"),
+                        onPressed: () {
+                          listIndex = "SortByDateNew";
+                          print("SortByDateNew");
+                        }),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.amber[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: FlatButton(
+                        child: Text("Sort By Date (oldest)"),
+                        onPressed: () {
+                          listIndex = "SortByNameOld";
+                          print("SortByNameOld");
+                        }),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.amber[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: FlatButton(
+                        child: Text("Sort By Likes"),
+                        onPressed: () {
+                          listIndex = "SortBylikes";
+                          print("SortBylikes");
+                        }),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.amber[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: FlatButton(
+                        child: Text("Filter Likes"),
+                        onPressed: () {
+                          listIndex = "FilterLikes";
+                          print("FilterLikes");
+                        }),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.amber[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: FlatButton(
+                      child: Text("Filter Read"),
+                      onPressed: () => listIndex = "FilterRead",
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(width: 20),
             ],
           ),
         ),
       ),
-      body: 
-      bookList.length == 0
+      body: bookList.length == 0
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -102,7 +182,6 @@ class _LibraryState extends State<Library> {
                 return _buildBookList(bookList[index], index);
               },
             ),
-            
     );
   }
 
@@ -147,7 +226,7 @@ class _LibraryState extends State<Library> {
                       Row(
                         children: [
                           //READ INFO
-          
+
                           refreshReadInfo == false
                               ? FutureBuilder(
                                   future: readControl(
@@ -350,13 +429,31 @@ class _LibraryState extends State<Library> {
   void getBooks() async {
     //bookList = await APIservices.getBooks();
     bookList = List<Book>.generate(2, (index) {
-      return Book(userName: "testUser", bookName: "testBook", likeCount: 5, comment: "testComment", createdDate: DateTime.now() );
+      return Book(
+          userName: "testUser",
+          bookName: "testBook",
+          likeCount: 5,
+          comment: "testComment",
+          createdDate: DateTime.now());
     });
-    bookList.add(Book(userName: "testUser2", bookName: "testBook2", likeCount: 15, comment: "testComment2", createdDate: DateTime(2018,9,23) ));
-    bookList.add(Book(userName: "testUser3", bookName: "testBook3", likeCount: 8, comment: "testComment3", createdDate: DateTime(2020,12,05) ));  
+    bookList.add(Book(
+        userName: "testUser2",
+        bookName: "testBook2",
+        likeCount: 15,
+        comment: "testComment2",
+        createdDate: DateTime(2018, 9, 23)));
+    bookList.add(Book(
+        userName: "testUser3",
+        bookName: "testBook3",
+        likeCount: 8,
+        comment: "testComment3",
+        createdDate: DateTime(2020, 12, 05)));
     setState(() {
       // ignore: unnecessary_statements
-      bookList;
+      bookList.sort((a, b) {
+        return b.likeCount.compareTo(a.likeCount); //SON NOKTA
+      });
+      //bookList;
     });
   }
 
