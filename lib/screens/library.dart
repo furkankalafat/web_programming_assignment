@@ -27,8 +27,10 @@ class _LibraryState extends State<Library> {
   List<String> commentList = [];
   List<TextEditingController> _controllers = [];
   List<Book> bookList = [];
+  List<Book> filteredBookList = [];
   bool refreshReadInfo = false;
   String listIndex;
+  String filterIndex;
   User user;
   @override
   void initState() {
@@ -107,7 +109,6 @@ class _LibraryState extends State<Library> {
                         onPressed: () {
                           listIndex = "SortByAtoZ";
                           getBooks();
-                          print("az");
                         }),
                   ),
                   Container(
@@ -120,7 +121,6 @@ class _LibraryState extends State<Library> {
                         onPressed: () {
                           listIndex = "SortByDateNew";
                           getBooks();
-                          print("SortByDateNew");
                         }),
                   ),
                   Container(
@@ -133,7 +133,6 @@ class _LibraryState extends State<Library> {
                         onPressed: () {
                           listIndex = "SortByDateOld";
                           getBooks();
-                          print("SortByDateOld");
                         }),
                   ),
                   Container(
@@ -146,10 +145,8 @@ class _LibraryState extends State<Library> {
                         onPressed: () {
                           setState(() {
                             listIndex = "SortBylikes";
-                          getBooks();
-                          print("SortBylikes");
+                            getBooks();
                           });
-                          
                         }),
                   ),
                   Container(
@@ -160,8 +157,8 @@ class _LibraryState extends State<Library> {
                     child: FlatButton(
                         child: Text("Filter Likes"),
                         onPressed: () {
-                          listIndex = "FilterLikes";
-                          print("FilterLikes");
+                          filterIndex = "FilterLikes";
+                          _filterBooks();
                         }),
                   ),
                   Container(
@@ -170,9 +167,23 @@ class _LibraryState extends State<Library> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: FlatButton(
-                      child: Text("Filter Read"),
-                      onPressed: () => listIndex = "FilterRead",
+                        child: Text("Filter Read"),
+                        onPressed: () {
+                          filterIndex = "FilterRead";
+                          _filterBooks();
+                        }),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.amber[300],
+                      borderRadius: BorderRadius.circular(10),
                     ),
+                    child: FlatButton(
+                        child: Text("Reset"),
+                        onPressed: () {
+                          filterIndex = "default";
+                          getBooks();
+                        }),
                   ),
                 ],
               ),
@@ -180,18 +191,46 @@ class _LibraryState extends State<Library> {
           ),
         ),
       ),
-      body: bookList.length == 0
+      body: filteredBookList.length == 0
           ? Center(
               child: CircularProgressIndicator(),
             )
           : ListView.builder(
-              itemCount: bookList.length,
+              itemCount: filteredBookList.length,
               itemBuilder: (BuildContext context, int index) {
                 _controllers.add(new TextEditingController());
-                return _buildBookList(bookList[index], index);
+                return _buildBookList(filteredBookList[index], index);
               },
             ),
     );
+  }
+
+  _filterBooks() {
+    setState(() {
+      if (filterIndex == "FilterLikes") {
+        filteredBookList = bookList.where((book) {
+          bool control = user.likesBookList.contains(book.bookName);
+          if (control)
+            return true;
+          else {
+            return false;
+          }
+        }).toList();
+      } else if (filterIndex == "FilterRead") {
+        setState(() {
+          filteredBookList = bookList.where((book) {
+            bool control = user.readBookList.contains(book.bookName);
+            if (control) {
+              return true;
+            } else {
+              return false;
+            }
+          }).toList();
+        });
+      } else {
+        getBooks();
+      }
+    });
   }
 
   _buildBookList(Book book, index) {
@@ -437,11 +476,11 @@ class _LibraryState extends State<Library> {
   void getBooks() async {
     //bookList = await APIservices.getBooks(listIndex);
     bookList.add(Book(
-          userName: "testUser",
-          bookName: "testBook",
-          likeCount: 5,
-          comment: "testComment",
-          createdDate: DateTime.now()));
+        userName: "testUser",
+        bookName: "cukulata",
+        likeCount: 5,
+        comment: "testComment",
+        createdDate: DateTime.now()));
     bookList.add(Book(
         userName: "testUser2",
         bookName: "testBook2",
@@ -466,8 +505,9 @@ class _LibraryState extends State<Library> {
         likeCount: 21,
         comment: "testComment5",
         createdDate: DateTime(2012, 06, 28)));
-        
+
     setState(() {
+      filteredBookList = bookList;
       /*
       bookList.sort((a, b) {
         return b.likeCount.compareTo(a.likeCount); //SON NOKTA
@@ -477,7 +517,6 @@ class _LibraryState extends State<Library> {
       // ignore: unnecessary_statements
       //bookList;
     });
-    
   }
 
   void like(Book book, String userName) async {
@@ -542,7 +581,11 @@ class _LibraryState extends State<Library> {
 
   void getUserInfo() async {
     //user = await APIservices.userInfo(widget.loginRequest);
-    user = User(eMail: "enesbayar@gmail.com", userName: "enesbayar", likesBookList: "testBook,testBook3", readBookList: "testBook2,testBook4");
+    user = User(
+        eMail: "enesbayar@gmail.com",
+        userName: "enesbayar",
+        likesBookList: "cukulata,testBook3",
+        readBookList: "testBook2,testBook4");
     debugPrint("""
     UserName = ${user.userName}
     likesList = ${user.likesBookList}
